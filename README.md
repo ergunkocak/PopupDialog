@@ -46,7 +46,7 @@ PopupDialog is available through [CocoaPods](http://cocoapods.org). Simply add t
 use_frameworks!
 
 target '<Your Target Name>'
-pod 'PopupDialog', '~> 0.6'
+pod 'PopupDialog', '~> 0.7'
 ```
 
 ## Carthage
@@ -56,13 +56,14 @@ pod 'PopupDialog', '~> 0.6'
 To install, simply add the following lines to your Cartfile:
 
 ```ruby
-github "Orderella/PopupDialog" ~> 0.6
+github "Orderella/PopupDialog" ~> 0.7
+github "KyoheiG3/DynamicBlurView" ~> 2.0
 ```
 
 ## Manually
 
 If you prefer not to use either of the above mentioned dependency managers, you can integrate PopupDialog into your project manually by adding the files contained in the [Classes](https://github.com/trungp/PopupDialog/tree/master/PopupDialog/Classes)
-folder to your project.
+folder to your project. Moreover, you have to manually add the classes of [DynamicBlurView](https://github.com/KyoheiG3/DynamicBlurView/tree/master/DynamicBlurView) to your project.
 
 
 <p>&nbsp;</p>
@@ -87,7 +88,8 @@ let buttonOne = CancelButton(title: "CANCEL") {
     print("You canceled the car dialog.")
 }
 
-let buttonTwo = DefaultButton(title: "ADMIRE CAR") {
+// This button will not the dismiss the dialog
+let buttonTwo = DefaultButton(title: "ADMIRE CAR", dismissOnTap: false) {
     print("What a beauty!")
 }
 
@@ -119,11 +121,13 @@ public convenience init(
     image: UIImage? = nil,
     buttonAlignment: UILayoutConstraintAxis = .vertical,
     transitionStyle: PopupDialogTransitionStyle = .bounceUp,
+    preferredWidth: CGFloat = 340,
     gestureDismissal: Bool = true,
+    hideStatusBar: Bool = false,
     completion: (() -> Void)? = nil) 
 ```
 
-The default dialog initializer is a convenient way of creating a popup with image, title and message (see image one and two).
+The default dialog initializer is a convenient way of creating a popup with image, title and message (see image one and three).
 
 Bascially, all parameters are optional, although this makes no sense at all. You want to at least add a message and a single button, otherwise the dialog can't be dismissed, unless you do it manually.
 
@@ -136,17 +140,30 @@ public init(
     viewController: UIViewController,
     buttonAlignment: UILayoutConstraintAxis = .vertical,
     transitionStyle: PopupDialogTransitionStyle = .bounceUp,
+    preferredWidth: CGFloat = 340,
     gestureDismissal: Bool = true,
+    hideStatusBar: Bool = false,
     completion: (() -> Void)? = nil) 
 ```
 
-You can pass your own view controller to PopupDialog (see image three). It is accessible via the `viewController` property of PopupDialog, which has to be casted to your view controllers class to access its properties. Make sure the custom view defines all constraints needed, so you don't run into any autolayout issues.
+You can pass your own view controller to PopupDialog (see image two). It is accessible via the `viewController` property of PopupDialog, which has to be casted to your view controllers class to access its properties. Make sure the custom view defines all constraints needed, so you don't run into any autolayout issues.
 
 Buttons are added below the controllers view, however, these buttons are optional. If you decide to not add any buttons, you have to take care of dismissing the dialog manually. Being a subclass of view controller, this can be easily done via `dismissViewControllerAnimated(flag: Bool, completion: (() -> Void)?)`.
 
-## Transition Animations
+## Button Alignment
 
-You can set a transition animation style with `.BounceUp` being the default. The following transition styles are available
+Buttons can be distributed either `.horizontal` or `.vertical`, with the latter being the default. Please note distributing buttons horizontally might not be a good idea if you have more than two buttons.
+
+```swift
+public enum UILayoutConstraintAxis : Int {
+	case horizontal
+	case vertical
+}
+```
+
+## Transition Style
+
+You can set a transition animation style with `.bounceUp` being the default. The following transition styles are available
 
 ```swift
 public enum PopupDialogTransitionStyle: Int {
@@ -157,20 +174,18 @@ public enum PopupDialogTransitionStyle: Int {
 }
 ```
 
-## Button Alignment
+## Preferred Width
 
-Buttons can be distributed either `.Horizontal` or `.Vertical`, with the latter being the default. Please note distributing buttons horizontally might not be a good idea if you have more than two buttons.
-
-```swift
-public enum UILayoutConstraintAxis : Int {   
-    case horizontal
-    case vertical
-}
-```
+PopupDialog will always try to have a max width of 340 . On iPhones with smaller screens, like iPhone 5 SE, width would be 320.
+340 is also the standard width for iPads. By setting preferredWidth you can override the max width of 340 for iPads only.
 
 ## Gesture Dismissal
 
 Gesture dismissal allows your dialog being dismissed either by a background tap or by swiping the dialog down. By default, this is set to `true`. You can prevent this behavior by setting `gestureDismissal` to `false` in the initializer.
+
+## Hide Status Bar
+
+PopupDialog can hide the status bar whenever it is displayed. Defaults to `false`. Make sure to add `UIViewControllerBasedStatusBarAppearance` to `Info.plist` and set it to `YES`.
 
 ## Completion
 This completion handler is called when the dialog was dismissed. This is especially useful for catching a gesture dismissal.
@@ -214,18 +229,28 @@ This makes even more sense, as popup dialogs and alerts are supposed to look con
 If you are using the default popup view, the following appearance settings are available:
 
 ```swift
-var dialogAppearance = PopupDialogDefaultView.appearance()
+let dialogAppearance = PopupDialogDefaultView.appearance()
 
-dialogAppearance.backgroundColor      = UIColor.white
-dialogAppearance.titleFont            = UIFont.boldSystemFont(ofSize: 14)
+dialogAppearance.backgroundColor      = .white
+dialogAppearance.titleFont            = .boldSystemFont(ofSize: 14)
 dialogAppearance.titleColor           = UIColor(white: 0.4, alpha: 1)
 dialogAppearance.titleTextAlignment   = .center
-dialogAppearance.messageFont          = UIFont.systemFont(ofSize: 14)
+dialogAppearance.messageFont          = .systemFont(ofSize: 14)
 dialogAppearance.messageColor         = UIColor(white: 0.6, alpha: 1)
 dialogAppearance.messageTextAlignment = .center
-dialogAppearance.cornerRadius         = 4
-dialogAppearance.shadowEnabled        = true
-dialogAppearance.shadowColor          = UIColor.black
+```
+
+## Dialog Container Appearance Settings
+
+The container view contains the PopupDialogDefaultView or your custom view controller. the following appearence settings are available:
+
+```swift
+let containerAppearance = PopupDialogContainerView.appearance()
+
+containerAppearance.backgroundColor = UIColor(red:0.23, green:0.23, blue:0.27, alpha:1.00)
+containerAppearance.cornerRadius    = 2
+containerAppearance.shadowEnabled   = true
+containerAppearance.shadowColor     = .black
 ```
 
 ## Overlay View Appearance Settings
@@ -235,16 +260,15 @@ This refers to the view that is used as an overlay above the underlying view con
 ```swift
 let overlayAppearance = PopupDialogOverlayView.appearance()
 
-overlayAppearance.color       = UIColor.black
-overlayAppearance.blurRadius  = 20
-overlayAppearance.blurEnabled = true
-overlayAppearance.liveBlur    = false
-overlayAppearance.opacity     = 0.7
+overlayAppearance.color           = .black
+overlayAppearance.blurRadius      = 20
+overlayAppearance.blurEnabled     = true
+overlayAppearance.liveBlurEnabled = false
+overlayAppearance.opacity         = 0.7
 ```
 
 #### Note
-Turning on `liveBlur`, that is realtime updates of the background view, results in a significantly higher CPU usage /power consumption and is therefore turned off by default now.
-Choose wisely whether you need this feature or not ;)
+Setting `liveBlurEnabled` to true, that is enabling realtime updates of the background view, results in a significantly higher CPU usage /power consumption and is therefore turned off by default. Choose wisely whether you need this feature or not ;)
 
 ## Button Appearance Settings
 
@@ -254,18 +278,18 @@ The standard button classes available are `DefaultButton`, `CancelButton` and `D
 var buttonAppearance = DefaultButton.appearance()
 
 // Default button
-buttonAppearance.titleFont      = UIFont.systemFont(ofSize: 14)
+buttonAppearance.titleFont      = .systemFont(ofSize: 14)
 buttonAppearance.titleColor     = UIColor(red: 0.25, green: 0.53, blue: 0.91, alpha: 1)
-buttonAppearance.buttonColor    = UIColor.clear
+buttonAppearance.buttonColor    = .clear
 buttonAppearance.separatorColor = UIColor(white: 0.9, alpha: 1)
 
 // Below, only the differences are highlighted
 
 // Cancel button
-CancelButton.appearance().titleColor = UIColor.lightGray
+CancelButton.appearance().titleColor = .lightGray
 
 // Destructive button
-DestructiveButton.appearance().titleColor = UIColor.red
+DestructiveButton.appearance().titleColor = .red
 ```
 
 Moreover, you can create a custom button by subclassing `PopupDialogButton`. The following example creates a solid blue button, featuring a bold white title font. Separators are invisble.
@@ -274,10 +298,10 @@ Moreover, you can create a custom button by subclassing `PopupDialogButton`. The
 public final class SolidBlueButton: PopupDialogButton {
 
     override public func setupView() {
-        defaultFont           = UIFont.boldSystemFont(ofSize: 16)
-        defaultTitleColor     = UIColor.white
-        defaultButtonColor    = UIColor.blue
-        defaultSeparatorColor = UIColor.clear
+        defaultFont           = .boldSystemFont(ofSize: 16)
+        defaultTitleColor     = .white
+        defaultButtonColor    = .blue
+        defaultSeparatorColor = .clear
         super.setupView()
     }
 }
@@ -296,7 +320,7 @@ The following is an example of a *Dark Mode* theme. You can find this in the Exa
 // Customize dialog appearance
 let pv = PopupDialogDefaultView.appearance()
 pv.titleFont    = UIFont(name: "HelveticaNeue-Light", size: 16)!
-pv.titleColor   = UIColor.white
+pv.titleColor   = .white
 pv.messageFont  = UIFont(name: "HelveticaNeue", size: 14)!
 pv.messageColor = UIColor(white: 0.8, alpha: 1)
 
@@ -305,20 +329,20 @@ let pcv = PopupDialogContainerView.appearance()
 pcv.backgroundColor = UIColor(red:0.23, green:0.23, blue:0.27, alpha:1.00)
 pcv.cornerRadius    = 2
 pcv.shadowEnabled   = true
-pcv.shadowColor     = UIColor.black
+pcv.shadowColor     = .black
 
 // Customize overlay appearance
 let ov = PopupDialogOverlayView.appearance()
-ov.blurEnabled = true
-ov.blurRadius  = 30
-ov.liveBlur    = true
-ov.opacity     = 0.7
-ov.color       = UIColor.black
+ov.blurEnabled     = true
+ov.blurRadius      = 30
+ov.liveBlurEnabled = true
+ov.opacity         = 0.7
+ov.color           = .black
 
 // Customize default button appearance
 let db = DefaultButton.appearance()
 db.titleFont      = UIFont(name: "HelveticaNeue-Medium", size: 14)!
-db.titleColor     = UIColor.white
+db.titleColor     = .white
 db.buttonColor    = UIColor(red:0.25, green:0.25, blue:0.29, alpha:1.00)
 db.separatorColor = UIColor(red:0.20, green:0.20, blue:0.25, alpha:1.00)
 
@@ -340,7 +364,7 @@ I can see that there is room for more customization options. I might add more of
 
 # Screen sizes and rotation
 
-Rotation and all screen sizes are supported. However, the dialog will never exceed a width of 340 points. This way, the dialog won't be too big on devices like iPads. However, landscape mode will not work well if the height of the dialog exceeds the width of the screen.
+Rotation and all screen sizes are supported. However, the dialog will never exceed a width of 340 points on iPhones. For iPads, you can set `preferredWidth` when initializing a new PopupDialog. However, landscape mode will not work well if the height of the dialog exceeds the width of the screen.
 
 <p>&nbsp;</p>
 
@@ -353,7 +377,7 @@ If you are using text fields in your custom view controller, popup dialog makes 
 PopupDialog exposes a nice and handy method that lets you trigger a button tap programmatically:
 
 ```swift
-public func tapButtonWithIndex(index: Int)
+public func tapButtonWithIndex(_ index: Int)
 ```
 
 Other than that, PopupDialog unit tests are included in the root folder.
@@ -373,7 +397,9 @@ PopupDialog *popup = [[PopupDialog alloc] initWithTitle:@"TEST"
                                                   image:nil
                                         buttonAlignment:UILayoutConstraintAxisHorizontal
                                         transitionStyle:PopupDialogTransitionStyleBounceUp
+                                         preferredWidth:340.0,
                                        gestureDismissal:YES
+                                          hideStatusBar:NO
                                              completion:nil];
 
 CancelButton *cancel = [[CancelButton alloc] initWithTitle:@"CANCEL" dismissOnTap:YES action:^{
@@ -391,6 +417,15 @@ DefaultButton *ok = [[DefaultButton alloc] initWithTitle:@"OK" dismissOnTap:YES 
 
 <p>&nbsp;</p>
 
+
+# Bonus
+
+## Shake animation
+
+If you happen to use PopupDialog to validate text input, for example, you can call the handy `shake()` method on PopupDialog.
+
+<p>&nbsp;</p>
+
 # Requirements
 
 Minimum requirement is iOS 9.0. This dialog was written with Swift 4, for support of older versions please head over to releases.
@@ -398,7 +433,9 @@ Minimum requirement is iOS 9.0. This dialog was written with Swift 4, for suppor
 <p>&nbsp;</p>
 
 # Changelog
-
+* **0.7.0** Removed FXBlurView while switching to DynamicBlurView
+* **0.6.2** Added preferredWidth option for iPads
+* **0.6.1** Added shake animation<br>Introduced hideStatusBar option
 * **0.6.0** Swift 4 support<br>Dropped iOS8 compatibility
 * **0.5.4** Fixed bug where blur view would reveal hidden layer<br>Improved view controller lifecycle handling<br>Scroll views can now be used with gesture dismissal
 * **0.5.3** Fixed memory leak with custom view controllers<br>Added UI automation & snapshot tests
@@ -431,14 +468,7 @@ You might also want to follow us on Twitter, [@theMWFire](https://twitter.com/th
 
 # Thank you
 Thanks to everyone who uses, enhances and improves this library, especially the contributors.
-
-<p>&nbsp;</p>
-
-# Images in the sample project
-
-The sample project features two images from Markus Spiske raumrot.com:<br>
-[Vintage Car One](https://www.pexels.com/photo/lights-vintage-luxury-tires-103290/) | [Vintage Car Two](https://www.pexels.com/photo/lights-car-vintage-luxury-92637/)<br>
-Thanks a lot for providing these :)
+Moreover, thanks to KyoheiG3 for porting FXBlurView to [DynamicBlurView](https://github.com/KyoheiG3/DynamicBlurView).
 
 <p>&nbsp;</p>
 

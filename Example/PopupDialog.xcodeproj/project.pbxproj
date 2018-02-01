@@ -215,7 +215,7 @@
 				C705B7FE1E33A0FE00D042A3 /* Tests.swift */,
 			);
 			name = UITests;
-			path = PopupDialog_ExampleUITests;
+			path = ../UITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -401,10 +401,12 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-PopupDialog_Example/Pods-PopupDialog_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DynamicBlurView/DynamicBlurView.framework",
 				"${BUILT_PRODUCTS_DIR}/PopupDialog/PopupDialog.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DynamicBlurView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PopupDialog.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
