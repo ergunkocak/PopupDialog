@@ -338,11 +338,11 @@ extension PopupDialog {
     /// Can be used to animate the switch to a new viewcontroller
     public func animateTo(_ vc: UIViewController) {
         let stackView = popupContainerView.stackView
-        let vcToRemove = childViewControllers[0]
-        addChildViewController(vc)
+        let vcToRemove = children[0]
+        addChild(vc)
         viewController = vc
-        viewController.didMove(toParentViewController: self)
-        vcToRemove.removeFromParentViewController()
+        viewController.didMove(toParent: self)
+        vcToRemove.removeFromParent()
         vcToRemove.view.removeFromSuperview()
         
         UIView.transition(
