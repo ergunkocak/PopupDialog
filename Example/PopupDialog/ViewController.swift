@@ -67,8 +67,8 @@ class ViewController: UIViewController {
         }
         
         // Create fourth (shake) button
-        let buttonTwo = DefaultButton(title: "SHAKE", dismissOnTap: false) {
-            popup.shake()
+        let buttonTwo = DefaultButton(title: "SHAKE", dismissOnTap: false) { [weak popup] in
+            popup?.shake()
         }
 
         // Create second button
@@ -97,7 +97,8 @@ class ViewController: UIViewController {
                                 message: message,
                                 buttonAlignment: .horizontal,
                                 transitionStyle: .zoomIn,
-                                gestureDismissal: true,
+                                tapGestureDismissal: true,
+                                panGestureDismissal: true,
                                 hideStatusBar: true) {
             print("Completed")
         }
@@ -129,8 +130,12 @@ class ViewController: UIViewController {
         let ratingVC = RatingViewController(nibName: "RatingViewController", bundle: nil)
 
         // Create the dialog
-        let popup = PopupDialog(viewController: ratingVC, buttonAlignment: .horizontal, transitionStyle: .bounceDown, gestureDismissal: true)
-
+        let popup = PopupDialog(viewController: ratingVC,
+                                buttonAlignment: .horizontal,
+                                transitionStyle: .bounceDown,
+                                tapGestureDismissal: true,
+                                panGestureDismissal: false)
+        
         // Create first button
         let buttonOne = CancelButton(title: "CANCEL", height: 60) {
             self.label.text = "You canceled the rating dialog"
