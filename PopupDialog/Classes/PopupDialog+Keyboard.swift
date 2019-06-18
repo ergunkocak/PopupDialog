@@ -28,7 +28,7 @@ import UIKit
 
 /// This extension is designed to handle dialog positioning
 /// if a keyboard is displayed while the popup is on top
-internal extension PopupDialog {
+extension PopupDialog {
 
     // MARK: - Keyboard & orientation observers
 
@@ -114,7 +114,7 @@ internal extension PopupDialog {
         if keyboardShown { centerPopup() }
     }
 
-    fileprivate func centerPopup() {
+    func centerPopup() {
 
         // Make sure keyboard should reposition on keayboard notifications
         guard keyboardShiftsView else { return }
@@ -122,11 +122,46 @@ internal extension PopupDialog {
         // Make sure a valid keyboard height is available
         guard let keyboardHeight = keyboardHeight else { return }
 
-        // Calculate new center of shadow background
-        let popupCenter =  keyboardShown ? keyboardHeight / -2 : 0
+        let viewHeight = popupContainerView.container.bounds.size.height
+        let statusBarHeight: CGFloat
+        let bottomBarHeight: CGFloat
+        if #available(iOS 11.0, *) {
+            statusBarHeight = popupContainerView.safeAreaInsets.top
+            bottomBarHeight = popupContainerView.safeAreaInsets.bottom
+        } else {
+            // Fallback on earlier versions
+            statusBarHeight = 20
+            bottomBarHeight = 0
+        }
+        let safeInsetHeight = statusBarHeight + bottomBarHeight
+        let screenHeight = UIScreen.main.bounds.size.height
+        let visibleAreaHeight = screenHeight - safeInsetHeight
+        let unUsedHeight = visibleAreaHeight - viewHeight
+        //        print("screenHeight:\(screenHeight) safeInsetHeight: \(safeInsetHeight) visibleAreaHeight:\(visibleAreaHeight) keyboardHeight: \(keyboardHeight)")
+        //        print("viewHeight: \(viewHeight) unUsedHeight: \(unUsedHeight)")
 
-        // Reposition and animate
-        popupContainerView.centerYConstraint?.constant = popupCenter
+        popupContainerView.topConstraint?.isActive = false
+        popupContainerView.topConstraint = nil
+        popupContainerView.centerYConstraint?.isActive = false
+        popupContainerView.centerYConstraint = nil
+
+        if keyboardHeight < unUsedHeight {
+            // Calculate new center of shadow background
+            let popupCenter = keyboardShown ? keyboardHeight / -2 : 0
+
+            // Reposition and animate
+            popupContainerView.centerYConstraint = NSLayoutConstraint(item: popupContainerView.shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: popupContainerView, attribute: .centerY, multiplier: 1, constant: popupCenter)
+            popupContainerView.centerYConstraint!.isActive = true
+
+        } else {
+            // Calculate new center of shadow background
+            let popupCenter = keyboardShown ? unUsedHeight / -2 : 0
+
+            // Reposition and animate
+            popupContainerView.topConstraint = NSLayoutConstraint(item: popupContainerView.container, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: popupContainerView, attribute: .top, multiplier: 1, constant: statusBarHeight)
+            popupContainerView.topConstraint!.isActive = true
+        }
+
         popupContainerView.pv_layoutIfNeededAnimated()
     }
 }

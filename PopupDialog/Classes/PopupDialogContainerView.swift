@@ -144,6 +144,9 @@ final public class PopupDialogContainerView: UIView {
     /// The center constraint of the shadow container
     internal var centerYConstraint: NSLayoutConstraint?
 
+    /// The top constraint of the container
+    internal var topConstraint: NSLayoutConstraint?
+
     // MARK: - Initializers
     
     internal init(frame: CGRect, preferredWidth: CGFloat) {

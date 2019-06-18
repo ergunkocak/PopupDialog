@@ -222,6 +222,10 @@ final public class PopupDialog: UIViewController {
         completion = nil
     }
 
+    public func reCenter() {
+        centerPopup()
+    }
+
     // MARK: - Dismissal related
 
     @objc fileprivate func handleTap(_ sender: UITapGestureRecognizer) {
