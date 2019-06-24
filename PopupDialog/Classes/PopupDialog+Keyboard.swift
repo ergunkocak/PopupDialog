@@ -140,26 +140,39 @@ extension PopupDialog {
         //        print("screenHeight:\(screenHeight) safeInsetHeight: \(safeInsetHeight) visibleAreaHeight:\(visibleAreaHeight) keyboardHeight: \(keyboardHeight)")
         //        print("viewHeight: \(viewHeight) unUsedHeight: \(unUsedHeight)")
 
-        popupContainerView.topConstraint?.isActive = false
-        popupContainerView.topConstraint = nil
-        popupContainerView.centerYConstraint?.isActive = false
-        popupContainerView.centerYConstraint = nil
+        if let constraint = popupContainerView.centerYConstraint {
+            popupContainerView.container.removeConstraint(constraint)
+            constraint.isActive = false
+            popupContainerView.centerYConstraint = nil
+        }
 
-        if keyboardHeight < unUsedHeight {
-            // Calculate new center of shadow background
-            let popupCenter = keyboardShown ? keyboardHeight / -2 : 0
+        if let constraint = popupContainerView.topConstraint {
+            popupContainerView.container.removeConstraint(constraint)
+            constraint.isActive = false
+            popupContainerView.topConstraint = nil
+        }
 
-            // Reposition and animate
-            popupContainerView.centerYConstraint = NSLayoutConstraint(item: popupContainerView.shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: popupContainerView, attribute: .centerY, multiplier: 1, constant: popupCenter)
-            popupContainerView.centerYConstraint!.isActive = true
+        if keyboardShown {
+            if keyboardHeight < unUsedHeight {
+                // Calculate new center of shadow background
+                let popupCenter = keyboardShown ? keyboardHeight / -2 : 0
 
+                // Reposition and animate
+                popupContainerView.centerYConstraint = NSLayoutConstraint(item: popupContainerView.shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: popupContainerView, attribute: .centerY, multiplier: 1, constant: popupCenter)
+                popupContainerView.centerYConstraint!.isActive = true
+
+            } else {
+                // Calculate new center of shadow background
+                let popupCenter = keyboardShown ? unUsedHeight / -2 : 0
+
+                // Reposition and animate
+                popupContainerView.topConstraint = NSLayoutConstraint(item: popupContainerView.container, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: popupContainerView, attribute: .top, multiplier: 1, constant: statusBarHeight)
+                popupContainerView.topConstraint!.isActive = true
+            }
         } else {
-            // Calculate new center of shadow background
-            let popupCenter = keyboardShown ? unUsedHeight / -2 : 0
-
             // Reposition and animate
-            popupContainerView.topConstraint = NSLayoutConstraint(item: popupContainerView.container, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: popupContainerView, attribute: .top, multiplier: 1, constant: statusBarHeight)
-            popupContainerView.topConstraint!.isActive = true
+            popupContainerView.centerYConstraint = NSLayoutConstraint(item: popupContainerView.shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: popupContainerView, attribute: .centerY, multiplier: 1, constant: 0)
+            popupContainerView.centerYConstraint!.isActive = true
         }
 
         popupContainerView.pv_layoutIfNeededAnimated()
