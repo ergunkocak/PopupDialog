@@ -61,9 +61,9 @@ final internal class PresentationManager: NSObject, UIViewControllerTransitionin
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 
-        if interactor.hasStarted || interactor.shouldFinish {
-            return DismissInteractiveTransition()
-        }
+//        if interactor.hasStarted || interactor.shouldFinish {
+//            return DismissInteractiveTransition()
+//        }
 
         var transition: TransitionAnimator
         switch transitionStyle {
