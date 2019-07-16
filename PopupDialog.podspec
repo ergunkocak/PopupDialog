@@ -11,5 +11,9 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.source_files = 'PopupDialog/Classes/**/*'
 
+  s.resource_bundles = {
+    'PopupDialog' => ['PopupDialog/Assets/**/*']
+  }
+
   s.dependency 'DynamicBlurView', '~> 3.0.1'
 end

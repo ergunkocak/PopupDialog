@@ -365,7 +365,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PopupDialog_Example/Pods-PopupDialog_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PopupDialog_Example/Pods-PopupDialog_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DynamicBlurView/DynamicBlurView.framework",
 				"${BUILT_PRODUCTS_DIR}/PopupDialog/PopupDialog.framework",
 			);
@@ -376,7 +376,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PopupDialog_Example/Pods-PopupDialog_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PopupDialog_Example/Pods-PopupDialog_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1FE5EDE6A918CFCE5BC5F01C /* [CP] Embed Pods Frameworks */ = {
@@ -385,7 +385,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PopupDialog_Tests/Pods-PopupDialog_Tests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PopupDialog_Tests/Pods-PopupDialog_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 			);
@@ -396,7 +396,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PopupDialog_Tests/Pods-PopupDialog_Tests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PopupDialog_Tests/Pods-PopupDialog_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3167EDD60F772379F4301B02 /* [CP] Check Pods Manifest.lock */ = {

@@ -33,7 +33,9 @@ final public class PopupDialog: UIViewController {
 
     /// First init flag
     fileprivate var initialized = false
-    
+
+    fileprivate let showTopArrow: Bool
+
     /// StatusBar display related
     fileprivate let hideStatusBar: Bool
     fileprivate var statusBarShouldBeHidden: Bool = false
@@ -86,6 +88,7 @@ final public class PopupDialog: UIViewController {
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
      - parameter panGestureDismissal: Indicates if dialog can be dismissed via pan gesture
      - parameter hideStatusBar:    Whether to hide the status bar on PopupDialog presentation
+     - parameter showTopArrow:     Whether to show an arrow above the popup
      - parameter completion:       Completion block invoked when dialog was dismissed
 
      - returns: Popup dialog default style
@@ -100,6 +103,7 @@ final public class PopupDialog: UIViewController {
                 tapGestureDismissal: Bool = true,
                 panGestureDismissal: Bool = true,
                 hideStatusBar: Bool = false,
+                showTopArrow: Bool = false,
                 completion: (() -> Void)? = nil) {
 
         // Create and configure the standard popup dialog view
@@ -116,6 +120,7 @@ final public class PopupDialog: UIViewController {
                   tapGestureDismissal: tapGestureDismissal,
                   panGestureDismissal: panGestureDismissal,
                   hideStatusBar: hideStatusBar,
+                  showTopArrow: showTopArrow,
                   completion: completion)
     }
 
@@ -129,6 +134,7 @@ final public class PopupDialog: UIViewController {
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
      - parameter panGestureDismissal: Indicates if dialog can be dismissed via pan gesture
      - parameter hideStatusBar:    Whether to hide the status bar on PopupDialog presentation
+     - parameter showTopArrow:     Whether to show an arrow above the popup
      - parameter completion:       Completion block invoked when dialog was dismissed
 
      - returns: Popup dialog with a custom view controller
@@ -141,11 +147,13 @@ final public class PopupDialog: UIViewController {
         tapGestureDismissal: Bool = true,
         panGestureDismissal: Bool = true,
         hideStatusBar: Bool = false,
+        showTopArrow: Bool = false,
         completion: (() -> Void)? = nil) {
 
         self.viewController = viewController
         self.preferredWidth = preferredWidth
         self.hideStatusBar = hideStatusBar
+        self.showTopArrow = showTopArrow
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
 
@@ -179,6 +187,15 @@ final public class PopupDialog: UIViewController {
             let panRecognizer = UIPanGestureRecognizer(target: interactor, action: #selector(InteractiveTransition.handlePan))
             panRecognizer.cancelsTouchesInView = false
             popupContainerView.stackView.addGestureRecognizer(panRecognizer)
+        }
+
+        if showTopArrow {
+            popupContainerView.topArrow.image = ImagesHelper.arrowImage
+            view.addSubview(popupContainerView.topArrow)
+            popupContainerView.topArrow.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            popupContainerView.topArrow.heightAnchor.constraint(equalToConstant: 8).isActive = true
+            popupContainerView.topArrow.topAnchor.constraint(equalTo: popupContainerView.container.topAnchor, constant: -16).isActive = true
+            popupContainerView.topArrow.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         }
     }
 
@@ -369,5 +386,21 @@ extension PopupDialog {
     /// Performs a shake animation on the dialog
     @objc public func shake() {
         popupContainerView.pv_shake()
+    }
+}
+
+public struct ImagesHelper {
+    private static var podsBundle: Bundle {
+        return Bundle(for: PopupDialog.self)
+//        let bundle = Bundle(for: PopupDialog.self)
+//        return Bundle(url: bundle.url(forResource: "PopupDialog", withExtension: "bundle")!)!
+    }
+
+    private static func imageFor(name imageName: String) -> UIImage {
+        return UIImage.init(named: imageName, in: podsBundle, compatibleWith: nil)!
+    }
+
+    public static var arrowImage: UIImage {
+        return imageFor(name: "arrow_up_popup")
     }
 }

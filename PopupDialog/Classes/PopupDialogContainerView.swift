@@ -135,7 +135,16 @@ final public class PopupDialogContainerView: UIView {
         stackView.spacing = 0
         return stackView
     }()
-    
+
+    // The main stack view, containing all relevant views
+    internal lazy var topArrow: UIImageView = {
+        let arrowView = UIImageView()
+        arrowView.translatesAutoresizingMaskIntoConstraints = false
+        arrowView.contentMode = .scaleAspectFit
+        arrowView.tag = 666
+        return arrowView
+    }()
+
     // The preferred width for iPads
     fileprivate let preferredWidth: CGFloat
 
