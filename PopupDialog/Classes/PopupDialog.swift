@@ -391,9 +391,10 @@ extension PopupDialog {
 
 public struct ImagesHelper {
     private static var podsBundle: Bundle {
-        return Bundle(for: PopupDialog.self)
-//        let bundle = Bundle(for: PopupDialog.self)
-//        return Bundle(url: bundle.url(forResource: "PopupDialog", withExtension: "bundle")!)!
+        // use this while developing. use the one below when using from release
+//        return Bundle(for: PopupDialog.self)
+        let bundle = Bundle(for: PopupDialog.self)
+        return Bundle(url: bundle.url(forResource: "PopupDialog", withExtension: "bundle")!)!
     }
 
     private static func imageFor(name imageName: String) -> UIImage {
