@@ -31,32 +31,36 @@ class AppearanceTests: XCTestCase {
         // Popup container defaults
         expect(popup.popupContainerView.backgroundColor) == UIColor.white
         expect(popup.popupContainerView.cornerRadius)    == 4
-        expect(popup.popupContainerView.shadowColor)     == UIColor.black
         expect(popup.popupContainerView.shadowEnabled).to(beTrue())
+        expect(popup.popupContainerView.shadowColor)     == UIColor.black
+        expect(popup.popupContainerView.shadowRadius)    == 5
+        expect(popup.popupContainerView.shadowOpacity)   == 0.4
+        expect(popup.popupContainerView.shadowOffset)    == CGSize(width: 0, height: 0)
+        expect(popup.popupContainerView.shadowPath).to(beNil())
 
         // Popup view defaults
-        expect(view.titleFont)    == UIFont.boldSystemFont(ofSize: 14)
+        expect(view.titleFont)    == .boldSystemFont(ofSize: 14)
         expect(view.titleColor)   == UIColor(white: 0.4, alpha: 1)
-        expect(view.messageFont)  == UIFont.systemFont(ofSize: 14)
+        expect(view.messageFont)  == .systemFont(ofSize: 14)
         expect(view.messageColor) == UIColor(white: 0.6, alpha: 1)
         expect(view.titleTextAlignment == .center).to(beTrue())
         expect(view.messageTextAlignment == .center).to(beTrue())
 
         // Button defaults
         let defaultButton = DefaultButton(title: "", action: nil)
-        expect(defaultButton.titleFont)      == UIFont.systemFont(ofSize: 14)
+        expect(defaultButton.titleFont)      == .systemFont(ofSize: 14)
         expect(defaultButton.titleColor!)    == UIColor(red: 0.25, green: 0.53, blue: 0.91, alpha: 1)
         expect(defaultButton.buttonColor)    == UIColor.clear
         expect(defaultButton.separatorColor) == UIColor(white: 0.9, alpha: 1)
         
         let cancelButton = CancelButton(title: "", action: nil)
-        expect(cancelButton.titleFont)      == UIFont.systemFont(ofSize: 14)
+        expect(cancelButton.titleFont)      == .systemFont(ofSize: 14)
         expect(cancelButton.titleColor!)    == UIColor.lightGray
         expect(cancelButton.buttonColor)    == UIColor.clear
         expect(cancelButton.separatorColor) == UIColor(white: 0.9, alpha: 1)
         
         let destructiveButton = DestructiveButton(title: "", action: nil)
-        expect(destructiveButton.titleFont)      == UIFont.systemFont(ofSize: 14)
+        expect(destructiveButton.titleFont)      == .systemFont(ofSize: 14)
         expect(destructiveButton.titleColor!)    == UIColor.red
         expect(destructiveButton.buttonColor)    == UIColor.clear
         expect(destructiveButton.separatorColor) == UIColor(white: 0.9, alpha: 1)
@@ -66,7 +70,7 @@ class AppearanceTests: XCTestCase {
         expect(overlay.color)      == UIColor.black
         expect(overlay.blurRadius) == 8
         expect(overlay.blurEnabled).to(beTrue())
-        expect(overlay.liveBlur).to(beFalse())
+        expect(overlay.liveBlurEnabled).to(beFalse())
     }
 
     func testCustomAppearance() {
@@ -85,13 +89,15 @@ class AppearanceTests: XCTestCase {
         pcv.cornerRadius        = 10
         pcv.shadowEnabled       = false
         pcv.shadowColor         = UIColor.green
+        pcv.shadowOpacity       = 0.2
+        pcv.shadowOffset        = CGSize(width: 2, height: 2)
 
         // Customize overlay appearance
         let ov = PopupDialogOverlayView.appearance()
         ov.color = UIColor.yellow
         ov.blurRadius = 20
         ov.blurEnabled = false
-        ov.liveBlur = true
+        ov.liveBlurEnabled = true
         ov.opacity = 0.5
 
         // Customize default button appearance
@@ -111,8 +117,10 @@ class AppearanceTests: XCTestCase {
         expect(pv.messageTextAlignment == .right).to(beTrue())
 
         // Popup container view customized appearance
-        expect(pcv.cornerRadius) == 10
-        expect(pcv.shadowColor)  == UIColor.green
+        expect(pcv.cornerRadius)  == 10
+        expect(pcv.shadowColor)   == UIColor.green
+        expect(pcv.shadowOffset)  == CGSize(width: 2, height: 2)
+        expect(pcv.shadowRadius)  == 0
         expect(pcv.shadowEnabled).to(beFalse())
 
         // Overlay customized appearance
@@ -120,7 +128,7 @@ class AppearanceTests: XCTestCase {
         expect(ov.blurRadius) == 20
         expect(ov.opacity)    == 0.5
         expect(ov.blurEnabled).to(beFalse())
-        expect(ov.liveBlur).to(beTrue())
+        expect(ov.liveBlurEnabled).to(beTrue())
 
         // Button customized appearance
         expect(db.titleFont)      == UIFont(name: "HelveticaNeue", size: 14)!
@@ -145,14 +153,17 @@ class AppearanceTests: XCTestCase {
         pcv.cornerRadius        = 4
         pcv.shadowEnabled       = true
         pcv.shadowColor         = UIColor.black
+        pcv.shadowOpacity       = 0.4
+        pcv.shadowRadius        = 5
+        pcv.shadowOffset        = CGSize(width: 0, height: 0)
         
         // Customize overlay appearance
         let ov = PopupDialogOverlayView.appearance()
-        ov.color       = UIColor.black
-        ov.blurRadius  = 8
-        ov.blurEnabled = true
-        ov.liveBlur    = false
-        ov.opacity     = 0.7
+        ov.color           = UIColor.black
+        ov.blurRadius      = 8
+        ov.blurEnabled     = true
+        ov.liveBlurEnabled = false
+        ov.opacity         = 0.7
         
         // Customize default button appearance
         let db = DefaultButton.appearance()

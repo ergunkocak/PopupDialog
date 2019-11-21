@@ -32,37 +32,37 @@ final public class PopupDialogDefaultView: UIView {
     // MARK: - Appearance
 
     /// The font and size of the title label
-    public dynamic var titleFont: UIFont {
+    @objc public dynamic var titleFont: UIFont {
         get { return titleLabel.font }
         set { titleLabel.font = newValue }
     }
 
     /// The color of the title label
-    public dynamic var titleColor: UIColor? {
+    @objc public dynamic var titleColor: UIColor? {
         get { return titleLabel.textColor }
         set { titleLabel.textColor = newValue }
     }
 
     /// The text alignment of the title label
-    public dynamic var titleTextAlignment: NSTextAlignment {
+    @objc public dynamic var titleTextAlignment: NSTextAlignment {
         get { return titleLabel.textAlignment }
         set { titleLabel.textAlignment = newValue }
     }
 
     /// The font and size of the body label
-    public dynamic var messageFont: UIFont {
+    @objc public dynamic var messageFont: UIFont {
         get { return messageLabel.font }
         set { messageLabel.font = newValue }
     }
 
     /// The color of the message label
-    public dynamic var messageColor: UIColor? {
+    @objc public dynamic var messageColor: UIColor? {
         get { return messageLabel.textColor }
         set { messageLabel.textColor = newValue}
     }
 
     /// The text alignment of the message label
-    public dynamic var messageTextAlignment: NSTextAlignment {
+    @objc public dynamic var messageTextAlignment: NSTextAlignment {
         get { return messageLabel.textAlignment }
         set { messageLabel.textAlignment = newValue }
     }
@@ -73,7 +73,7 @@ final public class PopupDialogDefaultView: UIView {
     internal lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -85,7 +85,7 @@ final public class PopupDialogDefaultView: UIView {
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
         titleLabel.textColor = UIColor(white: 0.4, alpha: 1)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        titleLabel.font = .boldSystemFont(ofSize: 14)
         return titleLabel
     }()
 
@@ -96,7 +96,7 @@ final public class PopupDialogDefaultView: UIView {
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
         messageLabel.textColor = UIColor(white: 0.6, alpha: 1)
-        messageLabel.font = UIFont.systemFont(ofSize: 14)
+        messageLabel.font = .systemFont(ofSize: 14)
         return messageLabel
     }()
     
@@ -127,7 +127,7 @@ final public class PopupDialogDefaultView: UIView {
         addSubview(messageLabel)
 
         // Layout views
-        let views = ["imageView": imageView, "titleLabel": titleLabel, "messageLabel": messageLabel] as [String : Any]
+        let views = ["imageView": imageView, "titleLabel": titleLabel, "messageLabel": messageLabel] as [String: Any]
         var constraints = [NSLayoutConstraint]()
 
         constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[imageView]|", options: [], metrics: nil, views: views)
@@ -137,7 +137,10 @@ final public class PopupDialogDefaultView: UIView {
         
         // ImageView height constraint
         imageHeightConstraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: imageView, attribute: .height, multiplier: 0, constant: 0)
-        constraints.append(imageHeightConstraint!)
+        
+        if let imageHeightConstraint = imageHeightConstraint {
+            constraints.append(imageHeightConstraint)
+        }
 
         // Activate constraints
         NSLayoutConstraint.activate(constraints)

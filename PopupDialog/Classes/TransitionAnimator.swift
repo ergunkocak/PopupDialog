@@ -49,13 +49,20 @@ internal class TransitionAnimator: NSObject, UIViewControllerAnimatedTransitioni
     internal func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         switch direction {
         case .in:
-            to = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
-            from = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
+            guard let to = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to),
+                let from = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) else { return }
+            
+            self.to = to
+            self.from = from
+
             let container = transitionContext.containerView
             container.addSubview(to.view)
         case .out:
-            to = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
-            from = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
+            guard let to = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to),
+                let from = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) else { return }
+            
+            self.to = to
+            self.from = from
         }
     }
 }

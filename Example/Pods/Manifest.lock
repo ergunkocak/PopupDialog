@@ -1,26 +1,39 @@
 PODS:
-  - FBSnapshotTestCase (2.1.4):
-    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
-  - FBSnapshotTestCase/Core (2.1.4)
-  - FBSnapshotTestCase/SwiftSupport (2.1.4):
-    - FBSnapshotTestCase/Core
-  - Nimble (5.0.0)
-  - PopupDialog (0.5.3)
+  - DynamicBlurView (4.0.0)
+  - iOSSnapshotTestCase (6.0.3):
+    - iOSSnapshotTestCase/SwiftSupport (= 6.0.3)
+  - iOSSnapshotTestCase/Core (6.0.3)
+  - iOSSnapshotTestCase/SwiftSupport (6.0.3):
+    - iOSSnapshotTestCase/Core
+  - Nimble (7.3.4)
+  - PopupDialog (1.1.1):
+    - DynamicBlurView (~> 4.0)
+  - SwiftLint (0.35.0)
 
 DEPENDENCIES:
-  - FBSnapshotTestCase
-  - Nimble (~> 5.0.0)
+  - iOSSnapshotTestCase (~> 6.0.2)
+  - Nimble (~> 7.3.1)
   - PopupDialog (from `../`)
+  - SwiftLint (~> 0.35)
+
+SPEC REPOS:
+  trunk:
+    - DynamicBlurView
+    - iOSSnapshotTestCase
+    - Nimble
+    - SwiftLint
 
 EXTERNAL SOURCES:
   PopupDialog:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
-  PopupDialog: 556684104977055f8b3c2752890b26cf3de4def4
+  DynamicBlurView: ccf9acd2b20c883cc2c72e3524a04d8d3ee20533
+  iOSSnapshotTestCase: 944a73f6d9676302811a86c0cf35f0e6ef5ab2a0
+  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  PopupDialog: 720c92befd8bc23c13442254945213db5612f149
+  SwiftLint: 5553187048b900c91aa03552807681bb6b027846
 
-PODFILE CHECKSUM: 3c0cdc96cf5fd9c2cbd806911d57125400e632f7
+PODFILE CHECKSUM: 07c617a2f6b270e1e612e31d4f4d376badedc104
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.8.1

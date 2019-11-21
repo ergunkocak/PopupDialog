@@ -1,8 +1,9 @@
+import Dispatch
 import Foundation
 
 /// "Global" state of Nimble is stored here. Only DSL functions should access / be aware of this
-/// class' existance
-internal class NimbleEnvironment {
+/// class' existence
+internal class NimbleEnvironment: NSObject {
     static var activeInstance: NimbleEnvironment {
         get {
             let env = Thread.current.threadDictionary["NimbleEnvironment"]
@@ -25,10 +26,10 @@ internal class NimbleEnvironment {
         set { NimbleAssertionHandler = newValue }
     }
 
-#if _runtime(_ObjC)
+    var suppressTVOSAssertionWarning: Bool = false
     var awaiter: Awaiter
 
-    init() {
+    override init() {
         let timeoutQueue: DispatchQueue
         if #available(OSX 10.10, *) {
             timeoutQueue = DispatchQueue.global(qos: .userInitiated)
@@ -39,7 +40,9 @@ internal class NimbleEnvironment {
         awaiter = Awaiter(
             waitLock: AssertionWaitLock(),
             asyncQueue: .main,
-            timeoutQueue: timeoutQueue)
+            timeoutQueue: timeoutQueue
+        )
+
+        super.init()
     }
-#endif
 }

@@ -12,7 +12,7 @@ class Tests: XCTestCase {
 
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+        super.tearDown() 
     }
 
     func testStandardDialogInstantiation() {
@@ -21,8 +21,6 @@ class Tests: XCTestCase {
         let popup = PopupDialog(title: "Test Title", message: "Test Message")
         expect(popup).toNot(beNil())
         
-        //XCTAssertNotNil(popup, "Popup Dialog should be non-nil")
-
         // Get popup dialog view
         guard let vc = popup.viewController as? PopupDialogDefaultViewController else {
             XCTFail("Could not instantiate Popup Dialog view")
@@ -38,7 +36,7 @@ class Tests: XCTestCase {
     func testImageDialogInstantiation() {
 
         // Create image
-        let image = UIImage(named: "pexels-photo-103290", in: Bundle.main, compatibleWith: nil)
+        let image = UIImage(named: "colorful", in: Bundle.main, compatibleWith: nil)
         expect(image).toNot(beNil())
 
         // Instantiate dialog with image
@@ -64,7 +62,7 @@ class Tests: XCTestCase {
         popup.beginAppearanceTransition(true, animated: false)
 
         // Create image
-        let image = UIImage(named: "pexels-photo-103290", in: Bundle.main, compatibleWith: nil)
+        let image = UIImage(named: "colorful", in: Bundle.main, compatibleWith: nil)
         XCTAssertNotNil(image, "Image should not be nil")
 
         // Change values after init
@@ -93,7 +91,7 @@ class Tests: XCTestCase {
         }
 
         // Create image
-        let image = UIImage(named: "pexels-photo-103290", in: Bundle.main, compatibleWith: nil)
+        let image = UIImage(named: "colorful", in: Bundle.main, compatibleWith: nil)
         expect(image).toNot(beNil())
 
         vc.titleText   = "New Test Title"
@@ -114,7 +112,7 @@ class Tests: XCTestCase {
         // Create four buttons
         var buttons = [PopupDialogButton]()
         for index in 1...4 {
-            let button = DefaultButton(title: "Test \(index)") { _ in }
+            let button = DefaultButton(title: "Test \(index)") {}
             expect(button).toNot(beNil())
             expect(button.title(for: .normal)) == "Test \(index)"
             expect(button.buttonAction).toNot(beNil())
@@ -126,16 +124,10 @@ class Tests: XCTestCase {
 
         // Show popup dialog
         popup.beginAppearanceTransition(true, animated: false)
-        
-        if #available(iOS 9.0, *) {
-            let buttonStackView = popup.popupContainerView.buttonStackView as! UIStackView
-            expect(buttonStackView.arrangedSubviews.count) == 4
-            expect(buttonStackView.arrangedSubviews) == buttons
-        } else {
-            let buttonStackView = popup.popupContainerView.buttonStackView as! TZStackView
-            expect(buttonStackView.arrangedSubviews.count) == 4
-            expect(buttonStackView.arrangedSubviews) == buttons
-        }
+
+        let buttonStackView = popup.popupContainerView.buttonStackView
+        expect(buttonStackView.arrangedSubviews.count) == 4
+        expect(buttonStackView.arrangedSubviews) == buttons
     }
 
     func testButtonTaps() {

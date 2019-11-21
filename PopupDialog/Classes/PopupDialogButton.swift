@@ -34,28 +34,28 @@ open class PopupDialogButton: UIButton {
     // MARK: Public
 
     /// The font and size of the button title
-    open dynamic var titleFont: UIFont? {
+    @objc open dynamic var titleFont: UIFont? {
         get { return titleLabel?.font }
         set { titleLabel?.font = newValue }
     }
     
     /// The height of the button
-    open dynamic var buttonHeight: Int
+    @objc open dynamic var buttonHeight: Int
     
     /// The title color of the button
-    open dynamic var titleColor: UIColor? {
-        get { return self.titleColor(for: UIControlState()) }
-        set { setTitleColor(newValue, for: UIControlState()) }
+    @objc open dynamic var titleColor: UIColor? {
+        get { return self.titleColor(for: UIControl.State()) }
+        set { setTitleColor(newValue, for: UIControl.State()) }
     }
 
     /// The background color of the button
-    open dynamic var buttonColor: UIColor? {
+    @objc open dynamic var buttonColor: UIColor? {
         get { return backgroundColor }
         set { backgroundColor = newValue }
     }
 
     /// The separator color of this button
-    open dynamic var separatorColor: UIColor? {
+    @objc open dynamic var separatorColor: UIColor? {
         get { return separator.backgroundColor }
         set {
             separator.backgroundColor = newValue
@@ -70,7 +70,7 @@ open class PopupDialogButton: UIButton {
     open var defaultSeparatorColor = UIColor(white: 0.9, alpha: 1)
 
     /// Whether button should dismiss popup when tapped
-    open var dismissOnTap = true
+    @objc open var dismissOnTap = true
 
     /// The action called when the button is tapped
     open fileprivate(set) var buttonAction: PopupDialogButtonAction?
@@ -109,9 +109,7 @@ open class PopupDialogButton: UIButton {
 
      - returns: PopupDialogButton
      */
-    public init(title: String,
-                height: Int = 45,
-                dismissOnTap: Bool = true, action: PopupDialogButtonAction?) {
+    @objc public init(title: String, height: Int = 45, dismissOnTap: Bool = true, action: PopupDialogButtonAction?) {
 
         // Assign the button height
         buttonHeight = height
@@ -122,7 +120,7 @@ open class PopupDialogButton: UIButton {
         super.init(frame: .zero)
 
         // Set the button title
-        setTitle(title, for: UIControlState())
+        setTitle(title, for: UIControl.State())
 
         self.dismissOnTap = dismissOnTap
 
@@ -139,7 +137,7 @@ open class PopupDialogButton: UIButton {
     open func setupView() {
 
         // Default appearance
-        setTitleColor(defaultTitleColor, for: UIControlState())
+        setTitleColor(defaultTitleColor, for: UIControl.State())
         titleLabel?.font              = defaultTitleFont
         backgroundColor               = defaultButtonColor
         separator.backgroundColor     = defaultSeparatorColor
