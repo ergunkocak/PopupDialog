@@ -49,7 +49,11 @@ final internal class InteractiveTransition: UIPercentDrivenInteractiveTransition
             hasStarted = true
             vc.dismiss(animated: true, completion: nil)
         case .changed:
-            shouldFinish = progress > 0.3
+            if let targetView = self.viewController?.view, abs(sender.velocity(in: targetView).y) >= 1000 {
+                shouldFinish = true
+            } else {
+                shouldFinish = progress > 0.3
+            }
             update(progress)
         case .cancelled:
             hasStarted = false
